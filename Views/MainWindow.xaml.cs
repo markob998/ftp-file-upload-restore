@@ -98,33 +98,17 @@ public partial class MainWindow : Window
     private void Log(string str = "", string title = "")
     {
         title = $"\n********************  {title}  ********************\n";
-        if (tbxLog.Dispatcher.CheckAccess())
+        Dispatcher.Invoke(() =>
         {
             tbxLog.Text += (title + str + "\n");
-        }
-        else
-        {
-            // The calling thread does not own the TextBox, use Dispatcher to update
-            Dispatcher.Invoke(() =>
-            {
-                tbxLog.Text += (title + str + "\n");
-            });
-        }
+        });
     }
     private void TxtLog_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (tbxLog.Dispatcher.CheckAccess())
+        Dispatcher.Invoke(() =>
         {
             tbxLog.ScrollToEnd();
-        }
-        else
-        {
-            // The calling thread does not own the TextBox, use Dispatcher to update
-            Dispatcher.Invoke(() =>
-            {
-                tbxLog.ScrollToEnd();
-            });
-        }
+        });
     }
     private async void BackupNow_Click(object sender, RoutedEventArgs e)
     {
