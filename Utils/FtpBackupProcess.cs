@@ -20,10 +20,16 @@ public class FtpBackupProcess
     public event Action<string> FtpRestoreFileStarted;
     public event Action<string> FtpRestoreFileFinished;
     public event Action<string> FtpRestoreFolderFinished;
+    public event Action FtpFileListEmpty;
     public FtpBackupProcess()
     { }
-    public async Task BackupFiles(List<string> fileList, string remoteDirName = "/")
+    public async Task<bool> BackupFiles(List<string> fileList, string remoteDirName = "/")
     {
+        if (fileList.Count() == 0)
+        {
+            OnFtpFileListEmpty();
+            return false;
+        }
         try
         {
             string ftpHost;
@@ -61,10 +67,12 @@ public class FtpBackupProcess
                 }
                 OnFtpUploadFolderFinished($"from {filePath} to {remotePath}");
             }
+            return true;
         }
         catch (Exception e)
         {
             MessageBox.Show(e.ToString());
+            return false;
         }
     }
     private async Task<bool> EnsureDirectoryExists(string remoteDir)
@@ -270,5 +278,9 @@ public class FtpBackupProcess
     private void OnFtpRestoreFolderFinished(string path)
     {
         FtpRestoreFolderFinished?.Invoke(path);
+    }
+    private void OnFtpFileListEmpty()
+    {
+        FtpFileListEmpty?.Invoke();
     }
 }

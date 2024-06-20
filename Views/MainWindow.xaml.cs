@@ -42,6 +42,7 @@ public partial class MainWindow : Window
         ftpBackupProcess.FtpRestoreFileStarted += OnFtpRestoreFileStarted;
         ftpBackupProcess.FtpRestoreFileFinished += OnFtpRestoreFileFinished;
         ftpBackupProcess.FtpRestoreFolderFinished += OnFtpRestoreFolderFinished;
+        ftpBackupProcess.FtpFileListEmpty += OnFtpFileListEmpty;
 
         FtpServerConfig.FtpHost = ftpHost;
         FtpServerConfig.FtpUser = ftpUser;
@@ -50,6 +51,12 @@ public partial class MainWindow : Window
         folderList = new UploadFolderList();
 
         Instance = this;
+
+        Log(title: "Application Started");
+    }
+    private void OnFtpFileListEmpty()
+    {
+        Log("There is no Upload files. Please check you have inserted the folders or they contains office file", "File List Empty");
     }
     private void OnFtpRestoreFolderStarted(string path)
     {
@@ -95,7 +102,7 @@ public partial class MainWindow : Window
             AddFolder(folderPath);
         }
     }
-    private void Log(string str = "", string title = "")
+    public void Log(string str = "", string title = "")
     {
         title = $"\n********************  {title}  ********************\n";
         Dispatcher.Invoke(() =>
@@ -113,8 +120,8 @@ public partial class MainWindow : Window
     private async void BackupNow_Click(object sender, RoutedEventArgs e)
     {
         Log(title: "Backup Started!");
-        await ftpBackupProcess.BackupFiles(folderList.AllDocFiles);
-        Log(title: "Backup Comlpeted!");
+        if (await ftpBackupProcess.BackupFiles(folderList.AllDocFiles))
+            Log(title: "Backup Completed!");
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {

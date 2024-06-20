@@ -22,12 +22,23 @@ public class BackupScheduler
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Start();
 
+            var jobKey = new JobKey("dailyBackupJob", "group1");
+
+            // Check if the job already exists and delete it if it does
+            if (await scheduler.CheckExists(jobKey))
+            {
+                MainWindow.Instance.Log(title: "Rescheduled Backup");
+                await scheduler.DeleteJob(jobKey);
+            }
+
+
             var jobData = new JobDataMap
                 {
                     { "FilePaths", filePaths.ConvertToString() }
                 };
 
             IJobDetail job = JobBuilder.Create<BackupJob>()
+                .WithIdentity(jobKey)
                 .UsingJobData(jobData)
                 .Build();
 
