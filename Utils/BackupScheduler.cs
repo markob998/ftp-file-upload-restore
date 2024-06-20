@@ -60,9 +60,10 @@ public class BackupJob : IJob
             if (filePaths != null)
             {
                 List<string> filePathList = filePaths.ConvertToStringList();
-                MessageBox.Show($"{filePathList.Count()}");
                 if (filePathList != null)
-                    await MainWindow.Instance.ftpBackupProcess.BackupFiles(filePathList);
+                    await MainWindow.Instance.ftpBackupProcess.BackupFiles(
+                        MainWindow.Instance.folderList.AllDocFiles
+                    );
             }
         }
         catch (Exception ex)
