@@ -133,11 +133,13 @@ public partial class MainWindow : Window
     }
     private async void Restore_Click(object sender, RoutedEventArgs e)
     {
+        Log(title: "Restore Started!");
         string folderPath = FolderBrowser.SelectFolder("Select a download folder.");
         if (!string.IsNullOrEmpty(folderPath))
         {
             await ftpBackupProcess.RestoreFolder(folderPath);
         }
+        Log(title: "Restore Completed!");
     }
     private async void ScheduleBackup_Click(object sender, RoutedEventArgs e)
     {
