@@ -40,14 +40,14 @@ public class FtpBackupProcess
 
             string remoteDir = $"{ftpHost}/backups{remoteDirName}";
 
-            await EnsureDirectoryExists(remoteDir);
 
             OnFtpConnected();
 
             foreach (var filePath in fileList)
             {
+                await EnsureDirectoryExists($"{remoteDir}/{Path.GetDirectoryName(filePath).Substring(2)}");
                 var fileName = Path.GetFileName(filePath);
-                var remotePath = $"{remoteDir}/{fileName}";
+                var remotePath = $"{remoteDir}/{filePath.Substring(2)}";
 
                 OnFtpUploadedFileStarted($"from {filePath} to {remotePath}");
 
