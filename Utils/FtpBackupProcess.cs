@@ -160,7 +160,7 @@ public class FtpBackupProcess
             if (remoteDirName == "/") remoteDirName = "";
             else if (!remoteDirName.StartsWith("/")) remoteDirName = "/" + remoteDirName;
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{FtpServerConfig.FtpHost}/{remoteDirName}");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{FtpServerConfig.FtpHost}/backups{remoteDirName}");
             request.Credentials = new NetworkCredential(FtpServerConfig.FtpUser, FtpServerConfig.FtpPassword);
             request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
@@ -210,7 +210,7 @@ public class FtpBackupProcess
 
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{FtpServerConfig.FtpHost}/backups{remoteDirName}");
             request.Credentials = new NetworkCredential(FtpServerConfig.FtpUser, FtpServerConfig.FtpPassword);
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
+            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
             using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
             using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII))
@@ -218,12 +218,28 @@ public class FtpBackupProcess
                 string line = null;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    if (line.EndsWith("..") || line.EndsWith(".")) continue;
-                    var remoteFilePath = $"{FtpServerConfig.FtpHost}/{line}";
-                    var localFilePath = Path.Combine(folderPath, line);
-                    OnFtpRestoreFileStarted(remoteFilePath);
-                    await DownloadFile(remoteFilePath, localFilePath);
-                    OnFtpRestoreFileFinished(localFilePath);
+                    string[] tokens = line.Split(new[] { ' ' }, 9, StringSplitOptions.RemoveEmptyEntries);
+                    string permissions = tokens[0];
+                    string name = tokens[8];
+
+                    if (permissions.StartsWith("d"))
+                    {
+                        if (name != "." && name != "..")
+                        {
+                            string subDir = $"{remoteDirName}/{name}";
+                            await RestoreFolder(folderPath, remoteDirName);
+                        }
+
+                    }
+                    else
+                    {
+                        var remoteFilePath = $"{FtpServerConfig.FtpHost}/backups{remoteDirName}/{name}";
+                        var localFilePath = Path.Combine(folderPath, $"{remoteDirName}/{name}");
+                        OnFtpRestoreFileStarted(remoteFilePath);
+                        await DownloadFile(remoteFilePath, localFilePath);
+                        OnFtpRestoreFileFinished(localFilePath);
+
+                    }
                 }
             }
         }
