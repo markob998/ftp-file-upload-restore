@@ -69,7 +69,7 @@ public partial class MainWindow : Window
     }
     private void OnFtpConnected()
     {
-        Log(title: "Ftp Connection completed!\n");
+        Log(title: "Ftp Server Connected!\n");
     }
     private void OnFtpUploadFolderStarted(string path)
     {
@@ -108,13 +108,13 @@ public partial class MainWindow : Window
     {
         Log(title: "Backup Started!");
         await ftpBackupProcess.BackupFiles(folderList.AllDocFiles);
-        Log(title: "Backup Competed!");
+        Log(title: "Backup Comlpeted!");
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {
         Log(title: "Browse Remote Server");
         List<string> remotePaths = await ftpBackupProcess.BrowseRemoteFolder("/");
-        string str  = remotePaths.ConvertToStringPath();
+        string str  = remotePaths.ConvertToString();
         Log(string.IsNullOrEmpty(str) ? "No Files ..." : str);
         Log(title: "Finished Browse Remote Server");
     }
@@ -142,7 +142,7 @@ public partial class MainWindow : Window
         {
             folderList.AddFolder(path);
             Log(path, "Local Folder Added");
-            Log(folderList.AllDocFiles.ConvertToStringPath(), title: "Sub Office Files");
+            Log(folderList.AllDocFiles.ConvertToString(), title: "Sub Office Files");
         }
     }
     public void RemoveFolder(string path)
@@ -151,7 +151,7 @@ public partial class MainWindow : Window
         {
             folderList.RemoveFolder(path);
             Log(path, "Local Folder Removed");
-            Log(folderList.AllDocFiles.ConvertToStringPath(), title: "Sub Office Files");
+            Log(folderList.AllDocFiles.ConvertToString(), title: "Sub Office Files");
         }
     }
 }

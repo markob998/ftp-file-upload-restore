@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
+using System.Windows;
+using FtpBackup.Config;
 
 namespace FtpBackup.Utils;
 
@@ -21,7 +23,7 @@ public class BackupScheduler
 
             var jobData = new JobDataMap
                 {
-                    { "FilePaths", JsonConvert.SerializeObject(filePaths) }
+                    { "FilePaths", filePaths.ConvertToString() }
                 };
 
             IJobDetail job = JobBuilder.Create<BackupJob>()
@@ -32,7 +34,7 @@ public class BackupScheduler
                 .WithIdentity("dailyTrigger", "group1")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(5)
+                    .WithIntervalInMinutes(1)
                     .RepeatForever())
                 .Build();
 
@@ -53,13 +55,14 @@ public class BackupJob : IJob
     {
         try
         {
-            string? filePathsJson = context.JobDetail.JobDataMap.GetString("FilePaths");
-            if (filePathsJson != null)
+            string? filePaths = context.JobDetail.JobDataMap.GetString("FilePaths");
+            if (filePaths != null)
             {
-                List<string>? filePaths = JsonConvert.DeserializeObject<List<string>>(filePathsJson);
+                List<string> filePathList = filePaths.ConvertToStringList();
+                MessageBox.Show(filePathList.ConvertToString());
                 var backupProcess = new FtpBackupProcess();
-                if (filePaths != null)
-                    await backupProcess.BackupFiles(filePaths);
+                if (filePathList != null)
+                    await backupProcess.BackupFiles(filePathList);
             }
         }
         catch (Exception ex)

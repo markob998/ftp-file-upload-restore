@@ -14,7 +14,11 @@ namespace FtpBackup.Config
             Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
             return regex.IsMatch(source);
         }
-        public static string ConvertToStringPath(this List<string> paths)
+        public static List<string> ConvertToStringList(this string source)
+        {
+            return source.Split("\n").ToList();
+        }
+        public static string ConvertToString(this List<string> paths)
         {
             string str = "";
             foreach (var path in paths) str = str + path + "\n";
