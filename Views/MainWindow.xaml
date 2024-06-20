@@ -8,18 +8,18 @@
         MinHeight="450"
         MinWidth="650"
         MaxHeight="650"
-        MaxWidth="850"
-        Height="550"
-        Width="750"
+        MaxWidth="1000"
+        Height="650"
+        Width="1000"
         Title="FTP Backup"
         ResizeMode="CanMinimize">
         <Grid Margin="20">
                 <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <!-- <RowDefinition Height="Auto"/> -->
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+                <!-- <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="20"/>
@@ -37,45 +37,54 @@
                                 Click="SelectFolder_Click"
                                 VerticalAlignment="Top"
                                 Height="25"/>
-                </Grid>
-                <Grid Grid.Row="1"
+                </Grid> -->
+                <Grid Grid.Row="0"
                       Margin="0 20 0 0">
                         <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
+                        <Button
+                                Grid.Column="0"
+                                Content="Add Folder"
+                                Click="SelectFolder_Click"
+                                VerticalAlignment="Top"
+                                Height="25"/>
                         <Button Content="Backup Now"
+                                Margin="20 0 0 0"
                                 Click="BackupNow_Click"
                                 VerticalAlignment="Top"
                                 Height="25"
-                                Grid.Column="0"/>
+                                Grid.Column="1"/>
                         <Button Content="Remote Browse"
+                                Margin="20 0 0 0"
                                 VerticalAlignment="Top"
                                 Height="25"
                                 Grid.Column="2"
                                 Click="RemoteBrowse_Click"/>
                         <Button Content="Restore"
+                                Margin="20 0 0 0"
                                 Click="Restore_Click"
                                 VerticalAlignment="Top"
                                 Height="25"
-                                Grid.Column="4"/>
-                        <Button Content="Configure"
+                                Grid.Column="3"/>
+                        <Button Content="Settings"
+                                Margin="20 0 0 0"
                                 VerticalAlignment="Top"
                                 Height="25"
-                                Grid.Column="6"
+                                Grid.Column="4"
                                 Click="Configure_Click"/>
                 </Grid>
-                <Grid Grid.Row="2"
+                <Grid Grid.Row="1"
                       Margin="0 20 0 0">
                         <TextBox
                                 IsReadOnly="True"
                                 HorizontalAlignment="Stretch"
                                 Name="tbxLog"
+                                TextChanged="TxtLog_TextChanged"
                                 VerticalAlignment="Stretch"/>
                 </Grid>
         </Grid>

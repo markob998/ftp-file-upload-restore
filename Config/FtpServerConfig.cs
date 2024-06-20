@@ -1,4 +1,4 @@
-namespace FtpBackup.Consts
+namespace FtpBackup.Config
 {
     class FtpServerConfig
     {

@@ -5,15 +5,10 @@ using System.Windows;
 using FluentFTP;
 using System.Text;
 
-using FtpBackup.Consts;
+using FtpBackup.Config;
 
 namespace FtpBackup.Utils
 {
-    // public delegate void FtpConnected();
-    // public delegate void FtpUploadFolderStarted();
-    // public delegate void FtpUploadedFileStarted();
-    // public delegate void FtpUploadedFileFinished();
-    // public delegate void FtpUploadFolderFinished();
     class FtpBackupProcess
     {
         public event Action FtpConnected;
@@ -27,7 +22,7 @@ namespace FtpBackup.Utils
         public event Action<string> FtpRestoreFolderFinished;
         public FtpBackupProcess()
         { }
-        public async Task BackupFolder(string folderPath, string remoteDirName = "/")
+        public async Task BackupFiles(List<string> fileList, string remoteDirName = "/")
         {
             try
             {
@@ -38,12 +33,13 @@ namespace FtpBackup.Utils
                 else if (!remoteDirName.StartsWith("/")) remoteDirName = "/" + remoteDirName;
 
                 string remoteDir = $"{ftpHost}/backups{remoteDirName}";
+
+                MessageBox.Show(remoteDir);
                 await EnsureDirectoryExists(remoteDir);
 
                 OnFtpConnected();
-                OnFtpUploadFolderStarted(folderPath);
 
-                foreach (var filePath in Directory.GetFiles(folderPath))
+                foreach (var filePath in fileList)
                 {
                     var fileName = Path.GetFileName(filePath);
                     var remotePath = $"{remoteDir}/{fileName}";
@@ -70,10 +66,6 @@ namespace FtpBackup.Utils
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
-            }
-            finally
-            {
-                OnFtpUploadFolderFinished(folderPath);
             }
         }
         private async Task<bool> EnsureDirectoryExists(string remoteDir)

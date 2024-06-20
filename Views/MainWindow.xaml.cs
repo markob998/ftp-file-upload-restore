@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using FtpBackup.Consts;
+using FtpBackup.Config;
 using FtpBackup.Utils;
 
 namespace FtpBackup.Views;
@@ -23,6 +23,11 @@ public partial class MainWindow : Window
     private string ftpUser = "dan@primariagradisteavalcea.ro";
     private string ftpPass = "jT4*000000";
     private FtpBackupProcess ftpBackupProcess;
+    public UploadFolderList folderList;
+    public static MainWindow Instance
+    {
+        get; private set;
+    }
     public MainWindow()
     {
         InitializeComponent();
@@ -41,50 +46,69 @@ public partial class MainWindow : Window
         FtpServerConfig.FtpHost = ftpHost;
         FtpServerConfig.FtpUser = ftpUser;
         FtpServerConfig.FtpPassword = ftpPass;
+
+        folderList = new UploadFolderList();
+
+        Instance = this;
     }
     private void OnFtpRestoreFolderStarted(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Restore Folder Started!\n";
+        Log(path, "Ftp Restore Folder Started!");
     }
     private void OnFtpRestoreFileStarted(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Restore File Started!\n";
+        Log(path, "Ftp Restore File Started!");
     }
     private void OnFtpRestoreFileFinished(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Restore File Finished!\n";
+        Log(path, "Ftp Restore File Finished!");
     }
     private void OnFtpRestoreFolderFinished(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Restore Folder Finished!\n";
+        Log(path, "Ftp Restore Folder Finished!");
     }
     private void OnFtpConnected()
     {
-        tbxLog.Text = tbxLog.Text + "Ftp Connection completed!\n";
+        Log(title: "Ftp Connection completed!\n");
     }
     private void OnFtpUploadFolderStarted(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Upload Folder Started!\n";
+        Log(path, "Ftp Upload Folder Started!");
     }
     private void OnFtpUploadedFileStarted(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Upload File Started!\n";
+        Log(path, "Ftp Upload File Started!");
     }
     private void OnFtpUploadedFileFinished(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Upload File Completed!\n";
+        Log(path, "Ftp Upload File Completed!");
     }
     private void OnFtpUploadFolderFinished(string path)
     {
-        tbxLog.Text = tbxLog.Text + $"{path} : Ftp Upload Folder Finished!\n";
+        Log(path, "Ftp Upload Folder Finished!");
     }
-    private void SelectFolder_Click(object sender, RoutedEventArgs e)
+    public void SelectFolder_Click(object sender, RoutedEventArgs e)
     {
         string folderPath = FolderBrowser.SelectFolder("Select a folder");
         if (!string.IsNullOrEmpty(folderPath))
         {
-            tbxFolderPath.Text = folderPath;
+            AddFolder(folderPath);
         }
+    }
+    private void Log(string str = "", string title = "")
+    {
+        title = $"\n********************  {title}  ********************\n";
+        tbxLog.Text = tbxLog.Text + title + str + "\n";
+    }
+    private void TxtLog_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        tbxLog.ScrollToEnd();
+    }
+    private async void BackupNow_Click(object sender, RoutedEventArgs e)
+    {
+        Log(title: "Backup Started!");
+        await ftpBackupProcess.BackupFiles(folderList.AllDocFiles);
+        Log(title: "Backup Competed!");
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {
@@ -102,24 +126,37 @@ public partial class MainWindow : Window
         tbxLog.Text = tbxLog.Text + str;
         tbxLog.Text = tbxLog.Text + "finishing browse ...\n";
     }
-    private async void BackupNow_Click(object sender, RoutedEventArgs e)
+    private async void Restore_Click(object sender, RoutedEventArgs e)
     {
-        await ftpBackupProcess.BackupFolder(tbxFolderPath.Text);
-        MessageBox.Show("Backup completed!");
+        // await ftpBackupProcess.RestoreFolder(tbxFolderPath.Text);
+        MessageBox.Show("Restore completed!");
     }
     private async void ScheduleBackup_Click(object sender, RoutedEventArgs e)
     {
-        await BackupScheduler.ScheduleDailyBackup(tbxFolderPath.Text);
+        // await BackupScheduler.ScheduleDailyBackup(tbxFolderPath.Text);
         MessageBox.Show("Daily backup scheduled!");
-    }
-    private async void Restore_Click(object sender, RoutedEventArgs e)
-    {
-        await ftpBackupProcess.RestoreFolder(tbxFolderPath.Text);
-        MessageBox.Show("Restore completed!");
     }
     private void Configure_Click(object sender, RoutedEventArgs e)
     {
         ConfigureDialog dialog = new ConfigureDialog();
         dialog.ShowDialog();
+    }
+    public void AddFolder(string path)
+    {
+        if (!string.IsNullOrEmpty(path))
+        {
+            folderList.AddFolder(path);
+            Log(path, "Local Folder Added");
+            Log(folderList.AllDocFiles.ConvertToStringPath(), title: "Sub Office Files");
+        }
+    }
+    public void RemoveFolder(string path)
+    {
+        if (!string.IsNullOrEmpty(path))
+        {
+            folderList.RemoveFolder(path);
+            Log(path, "Local Folder Removed");
+            Log(folderList.AllDocFiles.ConvertToStringPath(), title: "Sub Office Files");
+        }
     }
 }

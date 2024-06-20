@@ -33,7 +33,7 @@ namespace FtpBackup.Utils
         {
             string folderPath = context.JobDetail.JobDataMap.GetString("FolderPath");
             var backupProcess = new FtpBackupProcess();
-            await backupProcess.BackupFolder(folderPath);
+            // await backupProcess.BackupFolder(folderPath);
         }
     }
 }

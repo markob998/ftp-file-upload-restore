@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FtpBackup.Views"
         Title="Configure Dialog"
-        Height="250"
-        Width="400">
-    <Grid Margin="20 0 20 0">
+        Height="600"
+        Width="450">
+    <Grid Margin="20 0 20 20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -44,6 +45,7 @@
             Grid.Column="1"
             Margin="0 20 0 0"
             Height="25"
+            TextChanged="ConfigChanged"
             HorizontalAlignment="Stretch"
             VerticalContentAlignment="Center"/>
         <TextBox
@@ -52,6 +54,7 @@
             Grid.Column="1"
             Margin="0 20 0 0"
             Height="25"
+            TextChanged="ConfigChanged"
             HorizontalAlignment="Stretch"
             VerticalContentAlignment="Center"/>
         <TextBox
@@ -60,24 +63,61 @@
             Grid.Column="1"
             Margin="0 20 0 0"
             Height="25"
+            TextChanged="ConfigChanged"
             HorizontalAlignment="Stretch"
             VerticalContentAlignment="Center"/>
 
-        <Grid
-            Margin="0 20 0 0"
-            Grid.ColumnSpan="2"
-            Grid.Row="3">
+        <Grid Margin="0 20 0 0"
+              Grid.ColumnSpan="2"
+              Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button
+                Content="Add Folder"
+                Click="AddFolder_Clicked"
+                HorizontalAlignment="Stretch"
+                Height="25"
+                Grid.Row="0"
+                Grid.Column="0"/>
+            <Button
+                Content="Remove Folder"
+                Click="RemoveFolder_Clicked"
+                HorizontalAlignment="Stretch"
+                Height="25"
+                Grid.Row="0"
+                Grid.Column="2"/>
+            <ListBox x:Name="lbxFolderPath"
+                     Margin="0 20 0 0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Grid.Row="1"
+                     Grid.Column="0"
+                     Grid.ColumnSpan="3"/>
+        </Grid>
+        <Grid
+            Margin="0 20 0 0"
+            Grid.ColumnSpan="2"
+            Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                Name="btnSave"
                 Grid.Column="0"
                 Content="Save"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
                 Height="25"
+                IsEnabled="False"
                 Click="Save_Clicked"/>
             <Button
                 Grid.Column="2"
