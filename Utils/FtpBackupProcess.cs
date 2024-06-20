@@ -283,11 +283,10 @@ public class FtpBackupProcess
                     else
                     {
                         var remoteFilePath = $"{FtpServerConfig.FtpHost}/backups{remoteDirName}/{name}";
-                        var localFilePath = Path.Combine(folderPath, $"{remoteDirName}/{name}");
+                        var localFilePath = Path.Combine(folderPath, $"{name}");
                         OnFtpRestoreFileStarted(remoteFilePath);
                         await DownloadFile(remoteFilePath, localFilePath);
                         OnFtpRestoreFileFinished(localFilePath);
-
                     }
                 }
             }
