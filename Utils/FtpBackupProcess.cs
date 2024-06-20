@@ -40,13 +40,14 @@ public class FtpBackupProcess
 
             string remoteDir = $"{ftpHost}/backups{remoteDirName}";
 
-
             OnFtpConnected();
 
             foreach (var filePath in fileList)
             {
                 var fileName = Path.GetFileName(filePath);
                 var remotePath = $"{remoteDir}/{filePath.Substring(3)}";
+
+                await EnsureDirectoryExists($"backups{remoteDirName}/{filePath.Substring(3)}");
 
                 OnFtpUploadedFileStarted($"from {filePath} to {remotePath}");
 
@@ -275,7 +276,7 @@ public class FtpBackupProcess
                         if (name != "." && name != "..")
                         {
                             string subDir = $"{remoteDirName}/{name}";
-                            await RestoreFolder($"{folderPath}/{name}", remoteDirName);
+                            await RestoreFolder($"{folderPath}/{name}", subDir);
                         }
 
                     }
