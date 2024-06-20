@@ -112,19 +112,11 @@ public partial class MainWindow : Window
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {
-        tbxLog.Text = tbxLog.Text + "starting browse ...\n";
+        Log(title: "Browse Remote Server");
         List<string> remotePaths = await ftpBackupProcess.BrowseRemoteFolder("/");
-        string str = "";
-        if (remotePaths != null)
-        {
-            foreach (string remotePath in remotePaths)
-            {
-                str = str + remotePath + "\n";
-            }
-        }
-        else str = "no files ...\n";
-        tbxLog.Text = tbxLog.Text + str;
-        tbxLog.Text = tbxLog.Text + "finishing browse ...\n";
+        string str  = remotePaths.ConvertToStringPath();
+        Log(string.IsNullOrEmpty(str) ? "No Files ..." : str);
+        Log(title: "Finished Browse Remote Server");
     }
     private async void Restore_Click(object sender, RoutedEventArgs e)
     {
@@ -133,7 +125,6 @@ public partial class MainWindow : Window
         {
             await ftpBackupProcess.RestoreFolder(folderPath);
         }
-        MessageBox.Show("Restore completed!");
     }
     private async void ScheduleBackup_Click(object sender, RoutedEventArgs e)
     {
