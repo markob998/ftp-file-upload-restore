@@ -98,7 +98,18 @@ public partial class MainWindow : Window
     private void Log(string str = "", string title = "")
     {
         title = $"\n********************  {title}  ********************\n";
-        tbxLog.Text = tbxLog.Text + title + str + "\n";
+        if (tbxLog.Dispatcher.CheckAccess())
+        {
+            tbxLog.Text = tbxLog.Text + title + str + "\n";
+        }
+        else
+        {
+            // The calling thread does not own the TextBox, use Dispatcher to update
+            tbxLog.Dispatcher.Invoke(() =>
+            {
+                tbxLog.Text = tbxLog.Text + title + str + "\n";
+            });
+        }
     }
     private void TxtLog_TextChanged(object sender, TextChangedEventArgs e)
     {
@@ -114,7 +125,7 @@ public partial class MainWindow : Window
     {
         Log(title: "Browse Remote Server");
         List<string> remotePaths = await ftpBackupProcess.BrowseRemoteFolder("/");
-        string str  = remotePaths.ConvertToString();
+        string str = remotePaths.ConvertToString();
         Log(string.IsNullOrEmpty(str) ? "No Files ..." : str);
         Log(title: "Finished Browse Remote Server");
     }
