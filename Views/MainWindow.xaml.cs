@@ -128,13 +128,17 @@ public partial class MainWindow : Window
     }
     private async void Restore_Click(object sender, RoutedEventArgs e)
     {
-        // await ftpBackupProcess.RestoreFolder(tbxFolderPath.Text);
+        string folderPath = FolderBrowser.SelectFolder("Select a download folder.");
+        if (!string.IsNullOrEmpty(folderPath))
+        {
+            await ftpBackupProcess.RestoreFolder(folderPath);
+        }
         MessageBox.Show("Restore completed!");
     }
     private async void ScheduleBackup_Click(object sender, RoutedEventArgs e)
     {
-        // await BackupScheduler.ScheduleDailyBackup(tbxFolderPath.Text);
-        MessageBox.Show("Daily backup scheduled!");
+        Log(title: "Daily Schedule Set!");
+        await BackupScheduler.ScheduleDailyBackup(folderList.AllDocFiles);
     }
     private void Configure_Click(object sender, RoutedEventArgs e)
     {
