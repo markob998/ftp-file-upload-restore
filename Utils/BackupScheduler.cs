@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using NLog;
 using System.Windows;
 using FtpBackup.Config;
+using FtpBackup.Views;
 
 namespace FtpBackup.Utils;
 
@@ -59,10 +60,9 @@ public class BackupJob : IJob
             if (filePaths != null)
             {
                 List<string> filePathList = filePaths.ConvertToStringList();
-                MessageBox.Show(filePathList.ConvertToString());
-                var backupProcess = new FtpBackupProcess();
+                MessageBox.Show($"{filePathList.Count()}");
                 if (filePathList != null)
-                    await backupProcess.BackupFiles(filePathList);
+                    await MainWindow.Instance.ftpBackupProcess.BackupFiles(filePathList);
             }
         }
         catch (Exception ex)

@@ -9,7 +9,7 @@ using FtpBackup.Config;
 
 namespace FtpBackup.Utils;
 
-class FtpBackupProcess
+public class FtpBackupProcess
 {
     public event Action FtpConnected;
     public event Action<string> FtpUploadFolderStarted;

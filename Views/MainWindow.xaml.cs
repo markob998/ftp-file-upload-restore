@@ -22,7 +22,7 @@ public partial class MainWindow : Window
     private string ftpHost = "ftp.primariagradisteavalcea.ro";
     private string ftpUser = "dan@primariagradisteavalcea.ro";
     private string ftpPass = "jT4*000000";
-    private FtpBackupProcess ftpBackupProcess;
+    public FtpBackupProcess ftpBackupProcess;
     public UploadFolderList folderList;
     public static MainWindow Instance
     {
