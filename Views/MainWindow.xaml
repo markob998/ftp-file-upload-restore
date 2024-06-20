@@ -46,6 +46,7 @@
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
                         </Grid.ColumnDefinitions>
                         <Button
                                 Grid.Column="0"
@@ -71,11 +72,17 @@
                                 VerticalAlignment="Top"
                                 Height="25"
                                 Grid.Column="3"/>
+                        <Button Content="Start Schedule"
+                                Margin="20 0 0 0"
+                                Click="ScheduleBackup_Click"
+                                VerticalAlignment="Top"
+                                Height="25"
+                                Grid.Column="4"/>
                         <Button Content="Settings"
                                 Margin="20 0 0 0"
                                 VerticalAlignment="Top"
                                 Height="25"
-                                Grid.Column="4"
+                                Grid.Column="5"
                                 Click="Configure_Click"/>
                 </Grid>
                 <Grid Grid.Row="1"
