@@ -45,7 +45,8 @@ public class FtpBackupProcess
 
             foreach (var filePath in fileList)
             {
-                await EnsureDirectoryExists($"{remoteDir}/{Path.GetDirectoryName(filePath).Substring(3)}");
+                MessageBox.Show($"{remoteDir}/{Path.GetDirectoryName(filePath).Substring(3)}");
+                MessageBox.Show($"{await EnsureDirectoryExists($"backups{remoteDirName}/{Path.GetDirectoryName(filePath).Substring(3)}")}");
                 var fileName = Path.GetFileName(filePath);
                 var remotePath = $"{remoteDir}/{filePath.Substring(3)}";
 
@@ -77,15 +78,65 @@ public class FtpBackupProcess
     }
     private async Task<bool> EnsureDirectoryExists(string remoteDir)
     {
-        string ftpUser, ftpPass;
-        ftpUser = FtpServerConfig.FtpUser;
-        ftpPass = FtpServerConfig.FtpPassword;
+        string ftpUser = FtpServerConfig.FtpUser;
+        string ftpPass = FtpServerConfig.FtpPassword;
+        string ftpHost = FtpServerConfig.FtpHost;
 
+        try
+        {
+            remoteDir = remoteDir.Replace("\\", "/");
+            string[] subDirs = remoteDir.Trim('/').Split('/');
+            string currentDir = string.Empty;
+
+            foreach (var subDir in subDirs)
+            {
+                currentDir = string.IsNullOrEmpty(currentDir) ? subDir : $"{currentDir}/{subDir}";
+
+                string fullDirPath = $"{ftpHost}/{currentDir}";
+
+                if (!await DirectoryExists(fullDirPath, ftpUser, ftpPass))
+                {
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(fullDirPath);
+                    request.Credentials = new NetworkCredential(ftpUser, ftpPass);
+                    request.Method = WebRequestMethods.Ftp.MakeDirectory;
+
+                    try
+                    {
+                        using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
+                        {
+                            // Check if the directory was created successfully
+                            if (response.StatusCode != FtpStatusCode.PathnameCreated && response.StatusCode != FtpStatusCode.CommandOK)
+                            {
+                                throw new Exception($"Failed to create directory {fullDirPath}: {response.StatusDescription}");
+                            }
+                        }
+                    }
+                    catch (WebException ex)
+                    {
+                        FtpWebResponse response = (FtpWebResponse)ex.Response;
+                        if (response.StatusCode != FtpStatusCode.ActionNotTakenFileUnavailable)
+                        {
+                            throw; // Rethrow if the error is not "directory already exists"
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.ToString());
+            return false;
+        }
+    }
+    private async Task<bool> DirectoryExists(string remoteDir, string ftpUser, string ftpPass)
+    {
         try
         {
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteDir);
             request.Credentials = new NetworkCredential(ftpUser, ftpPass);
-            request.Method = WebRequestMethods.Ftp.MakeDirectory;
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
+
             using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
             {
                 return true;
@@ -94,14 +145,13 @@ public class FtpBackupProcess
         catch (WebException ex)
         {
             FtpWebResponse response = (FtpWebResponse)ex.Response;
-            if (response.StatusCode != FtpStatusCode.ActionNotTakenFileUnavailable)
+            if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
             {
-                throw; // Rethrow if the error is not "directory already exists"
+                return false;
             }
-            return false;
+            throw;
         }
     }
-
     public async Task<bool> CheckFileExists(string remotePath)
     {
         try
