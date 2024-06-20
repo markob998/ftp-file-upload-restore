@@ -35,7 +35,7 @@ public class BackupScheduler
                 .WithIdentity("dailyTrigger", "group1")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(1)
+                    .WithIntervalInHours(24)
                     .RepeatForever())
                 .Build();
 
