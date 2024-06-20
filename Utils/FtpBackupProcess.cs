@@ -160,9 +160,9 @@ public class FtpBackupProcess
             if (remoteDirName == "/") remoteDirName = "";
             else if (!remoteDirName.StartsWith("/")) remoteDirName = "/" + remoteDirName;
 
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{FtpServerConfig.FtpHost}/backups{remoteDirName}");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"{FtpServerConfig.FtpHost}/{remoteDirName}");
             request.Credentials = new NetworkCredential(FtpServerConfig.FtpUser, FtpServerConfig.FtpPassword);
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
+            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
             using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
             using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.ASCII))
@@ -170,8 +170,21 @@ public class FtpBackupProcess
                 string line = null;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    remoteDirs.Add(line);
-                    // if (line.EndsWith("..") || line.EndsWith(".")) continue;
+                    string[] tokens = line.Split(new[] { ' ' }, 9, StringSplitOptions.RemoveEmptyEntries);
+                    string permissions = tokens[0];
+                    string name = tokens[8];
+
+                    if (permissions.StartsWith("d"))
+                    {
+                        if (name != "." && name != "..")
+                        {
+                            string subDir = $"{remoteDirName}/{name}";
+                            remoteDirs.AddRange(await BrowseRemoteFolder(subDir));
+                        }
+
+                    }
+                    else
+                        remoteDirs.Add(name);
                 }
                 return remoteDirs;
             }
