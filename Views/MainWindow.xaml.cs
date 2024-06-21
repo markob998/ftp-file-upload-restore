@@ -34,9 +34,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        FtpServerConfig.FtpHost = ftpHost;
-        FtpServerConfig.FtpUser = ftpUser;
-        FtpServerConfig.FtpPassword = ftpPass;
+        if (!FtpServerConfig.LoadFromRegistry())
+        {
+            FtpServerConfig.FtpHost = ftpHost;
+            FtpServerConfig.FtpUser = ftpUser;
+            FtpServerConfig.FtpPassword = ftpPass;
+        }
 
         ftpBackupProcess = new FtpBackupProcess();
         ftpBackupProcess.FtpConnected += OnFtpConnected;
@@ -58,10 +61,12 @@ public partial class MainWindow : Window
         Instance = this;
         Log(title: "Application Started");
     }
-    private void OnFtpClearStarted() {
+    private void OnFtpClearStarted()
+    {
         Log(title: "Ftp Clear Server Started!");
     }
-    private void OnFtpClearFinished() {
+    private void OnFtpClearFinished()
+    {
         Log(title: "Ftp Clear Server Finished!");
     }
     private void OnFtpFileListEmpty()
@@ -86,7 +91,7 @@ public partial class MainWindow : Window
     }
     private void OnFtpConnected()
     {
-        Log(title: "Ftp Server Connected!\n");
+        Log(title: "Ftp Server Connected!");
     }
     private void OnFtpUploadFolderStarted(string path)
     {
@@ -183,6 +188,7 @@ public partial class MainWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         folderList.SaveToRegistry();
+        FtpServerConfig.SaveToRegistry();
         base.OnClosed(e);
     }
 }
