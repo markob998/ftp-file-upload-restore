@@ -179,6 +179,7 @@ public class FtpFileTransfor
     public async Task DownloadFile(string remotePath, string filePath)
     {
         string directory = Path.GetDirectoryName(filePath);
+        MessageBox.Show($"{directory}\n{filePath}");
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
