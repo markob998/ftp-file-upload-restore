@@ -36,9 +36,9 @@ public class FtpBackupProcess
         List<string> remotePaths = await ftpFileTransfor.BrowseRemoteFolder(remoteDir);
         return remotePaths;
     }
-    public async Task<bool> BackupFiles(List<string> fileList, string remoteDir = "/backups")
+    public async Task<bool> BackupFiles(List<string> filePathList, string remoteDir = "/backups")
     {
-        if (fileList.Count() == 0)
+        if (filePathList.Count() == 0)
         {
             OnFtpFileListEmpty();
             return false;
@@ -49,7 +49,7 @@ public class FtpBackupProcess
             remoteDir = remoteDir.MakeRegularDirectory();
 
             OnFtpConnected();
-            foreach (var filePath in fileList)
+            foreach (var filePath in filePathList)
             {
                 var fileName = Path.GetFileName(filePath);
                 var remotePathName = $"{remoteDir}/{filePath.Substring(3)}";
