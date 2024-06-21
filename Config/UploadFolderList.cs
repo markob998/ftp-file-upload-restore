@@ -24,6 +24,12 @@ namespace FtpBackup.Config
             foreach (var path in paths) str = str + path + "\n";
             return str;
         }
+        public static string MakeRegularDirectory(this string path)
+        {
+            if (path == "/") path = "";
+            else if (!path.StartsWith("/")) path = "/" + path;
+            return path;
+        }
     }
     public class UploadFolderList
     {

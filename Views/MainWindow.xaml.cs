@@ -32,6 +32,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        FtpServerConfig.FtpHost = ftpHost;
+        FtpServerConfig.FtpUser = ftpUser;
+        FtpServerConfig.FtpPassword = ftpPass;
+
         ftpBackupProcess = new FtpBackupProcess();
         ftpBackupProcess.FtpConnected += OnFtpConnected;
         ftpBackupProcess.FtpUploadFolderStarted += OnFtpUploadFolderStarted;
@@ -44,14 +48,9 @@ public partial class MainWindow : Window
         ftpBackupProcess.FtpRestoreFolderFinished += OnFtpRestoreFolderFinished;
         ftpBackupProcess.FtpFileListEmpty += OnFtpFileListEmpty;
 
-        FtpServerConfig.FtpHost = ftpHost;
-        FtpServerConfig.FtpUser = ftpUser;
-        FtpServerConfig.FtpPassword = ftpPass;
-
         folderList = new UploadFolderList();
 
         Instance = this;
-
         Log(title: "Application Started");
     }
     private void OnFtpFileListEmpty()
@@ -104,6 +103,7 @@ public partial class MainWindow : Window
     }
     public void Log(string str = "", string title = "")
     {
+        if(title == "") title = "Notification";
         title = $"\n********************  {title}  ********************\n";
         Dispatcher.Invoke(() =>
         {
@@ -126,7 +126,7 @@ public partial class MainWindow : Window
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {
         Log(title: "Browse Remote Server");
-        List<string> remotePaths = await ftpBackupProcess.BrowseRemoteFolder("/");
+        List<string> remotePaths = await ftpBackupProcess.BrowseRemoteFolder("/backups");
         string str = remotePaths.ConvertToString();
         Log(string.IsNullOrEmpty(str) ? "No Files ..." : str);
         Log(title: "Finished Browse Remote Server");
