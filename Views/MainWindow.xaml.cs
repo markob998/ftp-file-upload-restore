@@ -49,12 +49,20 @@ public partial class MainWindow : Window
         ftpBackupProcess.FtpRestoreFileFinished += OnFtpRestoreFileFinished;
         ftpBackupProcess.FtpRestoreFolderFinished += OnFtpRestoreFolderFinished;
         ftpBackupProcess.FtpFileListEmpty += OnFtpFileListEmpty;
+        ftpBackupProcess.FtpClearStarted += OnFtpClearStarted;
+        ftpBackupProcess.FtpClearFinished += OnFtpClearFinished;
 
         folderList = new UploadFolderList();
         folderList.LoadFromRegistry();
 
         Instance = this;
         Log(title: "Application Started");
+    }
+    private void OnFtpClearStarted() {
+        Log(title: "Ftp Clear Server Started!");
+    }
+    private void OnFtpClearFinished() {
+        Log(title: "Ftp Clear Server Finished!");
     }
     private void OnFtpFileListEmpty()
     {
@@ -128,7 +136,7 @@ public partial class MainWindow : Window
     }
     private async void ClearFtpServer_Clicked(object sender, RoutedEvent e)
     {
-
+        await ftpBackupProcess.ClearFtpServer();
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {

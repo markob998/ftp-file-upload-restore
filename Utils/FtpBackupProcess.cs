@@ -21,6 +21,8 @@ public class FtpBackupProcess
     public event Action<string> FtpRestoreFileStarted;
     public event Action<string> FtpRestoreFileFinished;
     public event Action<string> FtpRestoreFolderFinished;
+    public event Action FtpClearStarted;
+    public event Action FtpClearFinished;
     public event Action FtpFileListEmpty;
     FtpFileTransfor ftpFileTransfor;
     public FtpBackupProcess()
@@ -100,8 +102,11 @@ public class FtpBackupProcess
             // MessageBox.Show(e.ToString());
         }
     }
-    public async void ClearFtpServer(string remoteDir = "/backups") {
+    public async Task ClearFtpServer(string remoteDir = "/backups")
+    {
+        OnFtpClearStarted();
         await ftpFileTransfor.DeleteDirectory(remoteDir);
+        OnFtpClearFinished();
     }
     private void OnFtpConnected()
     {
@@ -142,5 +147,13 @@ public class FtpBackupProcess
     private void OnFtpFileListEmpty()
     {
         FtpFileListEmpty?.Invoke();
+    }
+    private void OnFtpClearStarted()
+    {
+        FtpClearStarted?.Invoke();
+    }
+    private void OnFtpClearFinished()
+    {
+        FtpClearFinished?.Invoke();
     }
 }
