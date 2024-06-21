@@ -59,7 +59,6 @@ public partial class MainWindow : Window
         Log(title: "Application Started");
     }
     private void OnFtpClearStarted() {
-        MessageBox.Show("started");
         Log(title: "Ftp Clear Server Started!");
     }
     private void OnFtpClearFinished() {
@@ -134,10 +133,6 @@ public partial class MainWindow : Window
         Log(title: "Backup Started!");
         if (await ftpBackupProcess.BackupFiles(folderList.AllDocFiles))
             Log(title: "Backup Completed!");
-    }
-    private async void ClearFtpServer_Clicked(object sender, RoutedEvent e)
-    {
-        await ftpBackupProcess.ClearFtpServer();
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {
