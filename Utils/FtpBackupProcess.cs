@@ -88,8 +88,8 @@ public class FtpBackupProcess
             List<string> remotePathList = await ftpFileTransfor.BrowseRemoteFolder(remoteDir);
             foreach (string remotePath in remotePathList)
             {
-                var localFilePath = Path.Combine(folderPath, remotePath);
-                MessageBox.Show($"{folderPath}\n{remotePath}\n{localFilePath}");
+                var localFilePath = $"{folderPath}{remotePath}";
+                localFilePath = localFilePath.Replace("\\", "/");
                 OnFtpRestoreFileStarted(remotePath);
                 await ftpFileTransfor.DownloadFile(remotePath, localFilePath);
                 OnFtpRestoreFileFinished(localFilePath);
