@@ -198,4 +198,65 @@ public class FtpFileTransfor
             }
         }
     }
+    public async Task<bool> DeleteDirectory(string remoteDir = "/backups")
+    {
+        try
+        {
+            remoteDir = remoteDir.Replace("\\", "/");
+            List<string> remoteItems = await BrowseRemoteFolder(remoteDir);
+
+            foreach (var item in remoteItems)
+            {
+                FtpWebRequest request = CreateFtpRequest(item);
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+
+                try
+                {
+                    using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
+                    {
+                        continue;
+                    }
+                }
+                catch (WebException ex)
+                {
+                    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                    if (response.StatusCode != FtpStatusCode.ActionNotTakenFileUnavailable)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            remoteItems.Reverse();
+
+            foreach (var item in remoteItems)
+            {
+                FtpWebRequest request = CreateFtpRequest(item);
+                request.Method = WebRequestMethods.Ftp.RemoveDirectory;
+
+                try
+                {
+                    using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
+                    {
+                        continue;
+                    }
+                }
+                catch (WebException ex)
+                {
+                    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                    if (response.StatusCode != FtpStatusCode.ActionNotTakenFileUnavailable)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
 }

@@ -71,7 +71,7 @@ public class FtpBackupProcess
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            // MessageBox.Show(e.ToString());
             return false;
         }
     }
@@ -97,7 +97,7 @@ public class FtpBackupProcess
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.ToString());
+            // MessageBox.Show(e.ToString());
         }
     }
     private void OnFtpConnected()

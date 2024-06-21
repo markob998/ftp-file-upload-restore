@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Configuration;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -49,6 +50,7 @@ public partial class MainWindow : Window
         ftpBackupProcess.FtpFileListEmpty += OnFtpFileListEmpty;
 
         folderList = new UploadFolderList();
+        folderList.LoadFromRegistry();
 
         Instance = this;
         Log(title: "Application Started");
@@ -103,7 +105,7 @@ public partial class MainWindow : Window
     }
     public void Log(string str = "", string title = "")
     {
-        if(title == "") title = "Notification";
+        if (title == "") title = "Notification";
         title = $"\n********************  {title}  ********************\n";
         Dispatcher.Invoke(() =>
         {
@@ -168,5 +170,10 @@ public partial class MainWindow : Window
             Log(path, "Local Folder Removed");
             Log(folderList.AllDocFiles.ConvertToString(), title: "Sub Office Files");
         }
+    }
+    protected override void OnClosed(EventArgs e)
+    {
+        folderList.SaveToRegistry();
+        base.OnClosed(e);
     }
 }
