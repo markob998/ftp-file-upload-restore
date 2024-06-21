@@ -79,7 +79,6 @@ public class FtpBackupProcess
     {
         try
         {
-            MessageBox.Show(folderPath);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
@@ -90,6 +89,7 @@ public class FtpBackupProcess
             foreach (string remotePath in remotePathList)
             {
                 var localFilePath = Path.Combine(folderPath, remotePath);
+                MessageBox.Show($"{folderPath}\n{remotePath}\n{localFilePath}");
                 OnFtpRestoreFileStarted(remotePath);
                 await ftpFileTransfor.DownloadFile(remotePath, localFilePath);
                 OnFtpRestoreFileFinished(localFilePath);
