@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -124,6 +125,10 @@ public partial class MainWindow : Window
         Log(title: "Backup Started!");
         if (await ftpBackupProcess.BackupFiles(folderList.AllDocFiles))
             Log(title: "Backup Completed!");
+    }
+    private async void ClearFtpServer_Clicked(object sender, RoutedEvent e)
+    {
+
     }
     private async void RemoteBrowse_Click(object sender, RoutedEventArgs e)
     {

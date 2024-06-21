@@ -10,6 +10,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -17,22 +18,29 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Grid.Row="0"
+              Margin="0 20 0 0">
+            <Button Content="Clear FtpServer"
+                    Height="25"/>
+        </Grid>
 
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Margin="0 25 0 0"
-                   Height="25"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Text="FTP Host :"/>
         <TextBlock Grid.Row="1"
                    Grid.Column="0"
                    Margin="0 25 0 0"
                    Height="25"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
-                   Text="FTP Username :"/>
+                   Text="FTP Host :"/>
         <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Margin="0 25 0 0"
+                   Height="25"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Text="FTP Username :"/>
+        <TextBlock Grid.Row="3"
                    Grid.Column="0"
                    Margin="0 25 0 0"
                    Height="25"
@@ -41,15 +49,6 @@
                    Text="FTP Password :"/>
         <TextBox
             Name="tbxFtpHost"
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="0 20 0 0"
-            Height="25"
-            TextChanged="ConfigChanged"
-            HorizontalAlignment="Stretch"
-            VerticalContentAlignment="Center"/>
-        <TextBox
-            Name="tbxFtpUser"
             Grid.Row="1"
             Grid.Column="1"
             Margin="0 20 0 0"
@@ -58,8 +57,17 @@
             HorizontalAlignment="Stretch"
             VerticalContentAlignment="Center"/>
         <TextBox
-            Name="tbxFtpPass"
+            Name="tbxFtpUser"
             Grid.Row="2"
+            Grid.Column="1"
+            Margin="0 20 0 0"
+            Height="25"
+            TextChanged="ConfigChanged"
+            HorizontalAlignment="Stretch"
+            VerticalContentAlignment="Center"/>
+        <TextBox
+            Name="tbxFtpPass"
+            Grid.Row="3"
             Grid.Column="1"
             Margin="0 20 0 0"
             Height="25"
@@ -69,7 +77,7 @@
 
         <Grid Margin="0 20 0 0"
               Grid.ColumnSpan="2"
-              Grid.Row="3">
+              Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -104,7 +112,7 @@
         <Grid
             Margin="0 20 0 0"
             Grid.ColumnSpan="2"
-            Grid.Row="4">
+            Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>

@@ -100,6 +100,9 @@ public class FtpBackupProcess
             // MessageBox.Show(e.ToString());
         }
     }
+    public async void ClearFtpServer(string remoteDir = "/backups") {
+        await ftpFileTransfor.DeleteDirectory(remoteDir);
+    }
     private void OnFtpConnected()
     {
         FtpConnected?.Invoke();
