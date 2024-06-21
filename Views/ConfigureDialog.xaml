@@ -23,7 +23,8 @@
               Grid.Row="0"
               Margin="0 20 0 0">
             <Button Content="Clear FtpServer"
-                    Height="25"/>
+                    Height="25"
+                    Click="ClearFtpServer_Clicked"/>
         </Grid>
 
         <TextBlock Grid.Row="1"

@@ -68,4 +68,9 @@ public partial class ConfigureDialog : Window
     {
         btnSave.IsEnabled = true;
     }
+    
+    private async void ClearFtpServer_Clicked(object sender, RoutedEventArgs e)
+    {
+        await MainWindow.Instance.ftpBackupProcess.ClearFtpServer();
+    }
 }

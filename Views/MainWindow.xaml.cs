@@ -59,6 +59,7 @@ public partial class MainWindow : Window
         Log(title: "Application Started");
     }
     private void OnFtpClearStarted() {
+        MessageBox.Show("started");
         Log(title: "Ftp Clear Server Started!");
     }
     private void OnFtpClearFinished() {
