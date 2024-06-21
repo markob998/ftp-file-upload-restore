@@ -79,6 +79,7 @@ public class FtpBackupProcess
     {
         try
         {
+            MessageBox.Show(folderPath);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
